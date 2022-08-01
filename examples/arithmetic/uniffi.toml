@@ -10,3 +10,6 @@ cdylib_name = "arithmetical"
 
 [bindings.swift]
 cdylib_name = "arithmetical"
+
+[bindings.csharp]
+cdylib_name = "arithmetical"

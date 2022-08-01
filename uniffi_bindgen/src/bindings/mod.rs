@@ -14,6 +14,7 @@ use serde::{Deserialize, Serialize};
 use crate::interface::ComponentInterface;
 use crate::MergeWith;
 
+pub mod csharp;
 pub mod kotlin;
 pub mod python;
 pub mod ruby;
@@ -31,6 +32,7 @@ pub enum TargetLanguage {
     Swift,
     Python,
     Ruby,
+    CSharp,
 }
 
 impl TryFrom<&str> for TargetLanguage {
@@ -41,6 +43,7 @@ impl TryFrom<&str> for TargetLanguage {
             "swift" => TargetLanguage::Swift,
             "python" | "py" => TargetLanguage::Python,
             "ruby" | "rb" => TargetLanguage::Ruby,
+            "csharp" | "cs" => TargetLanguage::CSharp,
             _ => bail!("Unknown or unsupported target language: \"{}\"", value),
         })
     }
@@ -73,6 +76,8 @@ pub struct Config {
     python: python::Config,
     #[serde(default)]
     ruby: ruby::Config,
+    #[serde(default)]
+    csharp: csharp::Config,
 }
 
 impl From<&ComponentInterface> for Config {
@@ -82,6 +87,7 @@ impl From<&ComponentInterface> for Config {
             swift: ci.into(),
             python: ci.into(),
             ruby: ci.into(),
+            csharp: ci.into(),
         }
     }
 }
@@ -93,6 +99,7 @@ impl MergeWith for Config {
             swift: self.swift.merge_with(&other.swift),
             python: self.python.merge_with(&other.python),
             ruby: self.ruby.merge_with(&other.ruby),
+            csharp: self.csharp.merge_with(&other.csharp),
         }
     }
 }
@@ -116,6 +123,9 @@ pub fn write_bindings(
             python::write_bindings(&config.python, ci, out_dir, try_format_code)?
         }
         TargetLanguage::Ruby => ruby::write_bindings(&config.ruby, ci, out_dir, try_format_code)?,
+        TargetLanguage::CSharp => {
+            csharp::write_bindings(&config.csharp, ci, out_dir, try_format_code)?
+        }
     }
     Ok(())
 }
@@ -135,6 +145,7 @@ pub fn compile_bindings(
         TargetLanguage::Swift => swift::compile_bindings(&config.swift, ci, out_dir)?,
         TargetLanguage::Python => (),
         TargetLanguage::Ruby => (),
+        TargetLanguage::CSharp => (),
     }
     Ok(())
 }
@@ -153,6 +164,7 @@ pub fn run_script(
         TargetLanguage::Swift => swift::run_script(out_dir, script_file)?,
         TargetLanguage::Python => python::run_script(out_dir, script_file)?,
         TargetLanguage::Ruby => ruby::run_script(out_dir, script_file)?,
+        TargetLanguage::CSharp => csharp::run_script(out_dir, script_file)?,
     }
     Ok(())
 }
