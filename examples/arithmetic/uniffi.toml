@@ -12,4 +12,5 @@ cdylib_name = "arithmetical"
 cdylib_name = "arithmetical"
 
 [bindings.csharp]
+class_name = "Arithmetic"
 cdylib_name = "arithmetical"
