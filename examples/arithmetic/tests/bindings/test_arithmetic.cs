@@ -23,12 +23,12 @@ Debug.Assert(Sub(8, 4) == 4);
 
 Debug.Assert(Div(8, 4) == 2);
 
-// try {
-//     Div(8, 0);
-//     Debug.Assert(false, "Should have panicked when dividing by zero");
-// } catch(InternalError e) {
-//     // It's okay!
-// }
+try {
+    Div(8, 0);
+    Debug.Assert(false, "Should have panicked when dividing by zero");
+} catch(InternalError e) {
+    // It's okay!
+}
 
 Debug.Assert(Equal(2, 2));
 Debug.Assert(Equal(4, 4));
